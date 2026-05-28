@@ -1,134 +1,148 @@
 'use client';
+
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Check, ArrowRight, ArrowLeft, Home, ShoppingBag, Building2, Factory } from 'lucide-react';
-import Link from 'next/link';
+import { ArrowLeft, ArrowRight, Check, Factory, Home, ShoppingBag } from 'lucide-react';
+import { plannerContent } from '../../data/content';
+
+const iconMap = {
+  Residential: <Home size={28} className="text-slate-950" />,
+  Commercial: <ShoppingBag size={28} className="text-slate-950" />,
+  Industrial: <Factory size={28} className="text-slate-950" />,
+};
 
 export default function Planner() {
   const [step, setStep] = useState(1);
-  const [plan, setPlan] = useState({ type: '', size: '', budget: '' });
+  const [projectType, setProjectType] = useState('Residential');
+  const [projectScale, setProjectScale] = useState('Medium');
 
-  const types = [
-    { name: 'Home', icon: <Home size={24} /> },
-    { name: 'Shop', icon: <ShoppingBag size={24} /> },
-    { name: 'Building', icon: <Building2 size={24} /> },
-    { name: 'Factory', icon: <Factory size={24} /> },
-  ];
+  const summaryText = plannerContent.summaryTemplate
+    .replace('{type}', projectType)
+    .replace('{scale}', projectScale);
 
   return (
-    <div className="min-h-screen bg-neutral-50 py-20 px-6">
-      <div className="max-w-4xl mx-auto bg-white shadow-2xl rounded-3xl overflow-hidden border border-neutral-100">
-        <div className="bg-black p-10 text-white flex justify-between items-center">
-           <div>
-              <h2 className="text-3xl font-black italic uppercase italic tracking-tighter">Project Builder</h2>
-              <p className="text-neutral-400 text-sm italic">Step {step} of 3: {step === 1 ? 'Configuration' : step === 2 ? 'Scale' : 'Summary'}</p>
-           </div>
-           <div className="flex gap-2">
-              {[1, 2, 3].map(s => (
-                <div key={s} className={`h-2 w-12 rounded-full transition-all duration-500 ${step >= s ? 'bg-yellow-500' : 'bg-neutral-800'}`}></div>
-              ))}
-           </div>
+    <main className="bg-slate-50 min-h-screen py-20 px-6 text-slate-900">
+      <div className="mx-auto max-w-5xl rounded-[2rem] bg-white p-8 shadow-2xl md:p-14">
+        <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-sm uppercase tracking-[0.35em] text-yellow-500 font-bold">{plannerContent.pageTitle}</p>
+            <h1 className="mt-4 text-4xl font-black">Plan your next build</h1>
+            <p className="mt-4 max-w-2xl text-slate-600 leading-7">{plannerContent.intro}</p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 text-sm uppercase tracking-[0.35em] text-slate-500">
+            {plannerContent?.steps.map((label, index) => (
+              <span key={label} className={index + 1 === step ? 'font-bold text-slate-900' : ''}>
+                {index + 1}. {label}
+              </span>
+            ))}
+          </div>
         </div>
 
-        <div className="p-10 md:p-16 min-h-[500px] flex flex-col justify-center">
-          <AnimatePresence mode="wait">
-            {step === 1 && (
-              <motion.div 
-                key="step1"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="space-y-8"
+        <div className="rounded-[2rem] border border-slate-200 bg-slate-50 p-8">
+          {step === 1 && (
+            <section className="space-y-8">
+              <div>
+                <p className="text-sm uppercase tracking-[0.35em] text-yellow-500 font-bold mb-3">Step 1</p>
+                <h2 className="text-3xl font-black">Choose a project type</h2>
+                <p className="mt-3 text-slate-600 leading-7">{plannerContent.intro}</p>
+              </div>
+              <div className="grid gap-4 md:grid-cols-3">
+                {plannerContent.projectTypes.map((type) => (
+                  <button
+                    key={type}
+                    type="button"
+                    onClick={() => setProjectType(type)}
+                    className={`group rounded-[1.5rem] border px-6 py-10 text-left transition ${projectType === type ? 'border-yellow-500 bg-yellow-50 shadow-lg' : 'border-slate-200 bg-white hover:border-slate-400'}`}
+                  >
+                    <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-200">
+                      {iconMap[type as keyof typeof iconMap]}
+                    </div>
+                    <h3 className="text-xl font-black mb-2">{type}</h3>
+                    <p className="text-slate-600 leading-6">Select the project type that matches your build.</p>
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => setStep(2)}
+                className="inline-flex items-center gap-3 rounded-full bg-slate-950 px-8 py-4 text-sm font-bold uppercase tracking-[0.2em] text-white transition hover:bg-slate-800"
               >
-                <h3 className="text-4xl font-black text-neutral-900 italic uppercase italic">Select Project Type</h3>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                  {types.map(t => (
-                    <button 
-                      key={t.name} 
-                      onClick={() => { setPlan({...plan, type: t.name}); setStep(2); }} 
-                      className={`group p-8 border-2 rounded-2xl flex flex-col items-center gap-4 transition-all duration-300 ${plan.type === t.name ? 'border-yellow-500 bg-yellow-50 shadow-xl' : 'border-neutral-100 hover:border-yellow-200'}`}
-                    >
-                      <div className={`p-4 rounded-full transition ${plan.type === t.name ? 'bg-yellow-500 text-black' : 'bg-neutral-100 text-neutral-400 group-hover:bg-neutral-200'}`}>
-                        {t.icon}
-                      </div>
-                      <span className="font-bold text-neutral-800 tracking-tight">{t.name}</span>
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
+                Continue <ArrowRight size={18} />
+              </button>
+            </section>
+          )}
 
-            {step === 2 && (
-              <motion.div 
-                key="step2"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="space-y-8"
+          {step === 2 && (
+            <section className="space-y-8">
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.2em] text-slate-500 hover:text-slate-900"
               >
-                <div className="flex items-center gap-4 mb-4 cursor-pointer text-neutral-400 hover:text-black transition" onClick={() => setStep(1)}>
-                   <ArrowLeft size={20} /> <span className="text-sm font-bold uppercase italic tracking-widest">Back to type</span>
-                </div>
-                <h3 className="text-4xl font-black text-neutral-900 italic uppercase italic">Project Scale (sq ft)</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {['1000 - 2500', '2500 - 5000', '5000+'].map(s => (
-                    <button 
-                      key={s} 
-                      onClick={() => { setPlan({...plan, size: s}); setStep(3); }} 
-                      className={`p-10 border-2 rounded-2xl text-center font-black text-xl transition-all ${plan.size === s ? 'border-yellow-500 bg-yellow-50' : 'border-neutral-100 hover:border-yellow-500'}`}
-                    >
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-
-            {step === 3 && (
-              <motion.div 
-                key="step3"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="text-center space-y-10"
+                <ArrowLeft size={18} /> Back
+              </button>
+              <div>
+                <p className="text-sm uppercase tracking-[0.35em] text-yellow-500 font-bold mb-3">Step 2</p>
+                <h2 className="text-3xl font-black">Select project scale</h2>
+                <p className="mt-3 text-slate-600 leading-7">Define the scale of your project before reviewing the plan.</p>
+              </div>
+              <div className="grid gap-4 md:grid-cols-3">
+                {plannerContent.scales.map((scale) => (
+                  <button
+                    key={scale}
+                    type="button"
+                    onClick={() => setProjectScale(scale)}
+                    className={`rounded-[1.5rem] border px-6 py-10 text-center font-black uppercase tracking-[0.2em] transition ${projectScale === scale ? 'border-yellow-500 bg-yellow-50 shadow-lg' : 'border-slate-200 bg-white hover:border-slate-400'}`}
+                  >
+                    {scale}
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => setStep(3)}
+                className="inline-flex items-center gap-3 rounded-full bg-slate-950 px-8 py-4 text-sm font-bold uppercase tracking-[0.2em] text-white transition hover:bg-slate-800"
               >
-                <div className="w-24 h-24 bg-yellow-500 rounded-full flex items-center justify-center mx-auto shadow-2xl shadow-yellow-200">
-                  <Check size={48} className="text-black" />
-                </div>
-                <div className="space-y-2">
-                  <h3 className="text-4xl font-black text-neutral-900 italic uppercase italic">Configured Ready</h3>
-                  <p className="text-neutral-500 italic">Your custom proposal for a <span className="text-black font-bold uppercase italic underline decoration-yellow-500 underline-offset-4">{plan.size} sq ft {plan.type}</span> is being generated.</p>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto p-6 bg-neutral-50 rounded-2xl border border-neutral-100">
-                   <div className="text-left">
-                      <p className="text-xs font-bold text-neutral-400 uppercase italic">Category</p>
-                      <p className="font-black text-neutral-900 uppercase italic">{plan.type}</p>
-                   </div>
-                   <div className="text-left">
-                      <p className="text-xs font-bold text-neutral-400 uppercase italic">Scale</p>
-                      <p className="font-black text-neutral-900 uppercase italic">{plan.size} sq ft</p>
-                   </div>
-                </div>
+                Review plan <ArrowRight size={18} />
+              </button>
+            </section>
+          )}
 
-                <div className="flex flex-col md:flex-row gap-4 justify-center pt-6">
-                   <button className="bg-black text-white px-12 py-5 font-black uppercase italic tracking-widest hover:bg-yellow-500 hover:text-black transition-all shadow-xl shadow-neutral-200 flex items-center justify-center gap-3">
-                      Submit for Quote <ArrowRight size={20} />
-                   </button>
-                   <button onClick={() => setStep(1)} className="border-2 border-neutral-200 text-neutral-400 px-10 py-5 font-bold uppercase italic tracking-widest hover:border-black hover:text-black transition">
-                      Start Over
-                   </button>
+          {step === 3 && (
+            <section className="space-y-8 text-center">
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-yellow-400">
+                <Check size={32} className="text-slate-950" />
+              </div>
+              <div>
+                <p className="text-sm uppercase tracking-[0.35em] text-yellow-500 font-bold mb-3">Step 3</p>
+                <h2 className="text-3xl font-black">Your plan summary</h2>
+                <p className="mt-4 text-slate-600 leading-7">{summaryText}</p>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="rounded-[1.5rem] border border-slate-200 bg-white p-8">
+                  <p className="text-xs uppercase tracking-[0.35em] text-slate-500">Project type</p>
+                  <p className="mt-3 text-2xl font-black">{projectType}</p>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                <div className="rounded-[1.5rem] border border-slate-200 bg-white p-8">
+                  <p className="text-xs uppercase tracking-[0.35em] text-slate-500">Scale</p>
+                  <p className="mt-3 text-2xl font-black">{projectScale}</p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-4 md:flex-row md:justify-center">
+                <button className="inline-flex items-center justify-center gap-3 rounded-full bg-slate-950 px-8 py-4 text-sm font-bold uppercase tracking-[0.2em] text-white transition hover:bg-slate-800">
+                  {plannerContent.submitButton}
+                </button>
+                <button onClick={() => setStep(1)} className="inline-flex items-center justify-center rounded-full border border-slate-300 px-8 py-4 text-sm font-bold uppercase tracking-[0.2em] text-slate-950 transition hover:border-slate-500">
+                  {plannerContent.restartButton}
+                </button>
+              </div>
+            </section>
+          )}
         </div>
       </div>
-      
-      <div className="max-w-4xl mx-auto mt-12 text-center">
-         <Link href="/" className="text-neutral-400 hover:text-black transition font-bold uppercase italic text-xs tracking-widest border-b border-transparent hover:border-black">
-           Back to home
-         </Link>
+
+      <div className="mx-auto mt-12 max-w-5xl text-center text-sm uppercase tracking-[0.35em] text-slate-500">
+        <a href="/" className="hover:text-slate-900">{plannerContent.backLink}</a>
       </div>
-    </div>
+    </main>
   );
 }

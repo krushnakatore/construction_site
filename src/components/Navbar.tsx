@@ -1,30 +1,68 @@
+'use client';
+
 import Link from 'next/link';
-import { LayoutGrid, Hammer } from 'lucide-react';
+import { useState } from 'react';
+import { Menu, X } from 'lucide-react';
+import { navLinks } from '../data/content';
 
 export default function Navbar() {
+  const [open, setOpen] = useState(false);
+
   return (
-    <nav className="flex justify-between items-center px-6 md:px-12 py-5 bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 shadow-sm">
-      <Link href="/" className="flex items-center gap-2">
-        <div className="bg-yellow-500 p-1.5 rounded-lg">
-          <Hammer size={24} className="text-black" />
-        </div>
-        <h1 className="text-2xl font-black tracking-tighter text-black">BUILD<span className="text-yellow-500">PRO</span></h1>
-      </Link>
-      
-      <div className="hidden md:flex items-center space-x-8 text-sm font-bold uppercase tracking-wider text-gray-700">
-        <Link href="/" className="hover:text-yellow-500 transition-colors">Home</Link>
-        <Link href="/projects" className="hover:text-yellow-500 transition-colors">Projects</Link>
-        <Link href="/services" className="hover:text-yellow-500 transition-colors">Services</Link>
-        <Link href="/customize" className="hover:text-yellow-500 transition-colors">Customize</Link>
-        <Link href="/contact" className="hover:text-yellow-500 transition-colors">Contact</Link>
-        <Link href="/planner" className="bg-black text-white hover:bg-yellow-500 hover:text-black px-6 py-2.5 rounded-sm transition-all duration-300">
-          Build Planner
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-10">
+        <Link href="/" className="flex items-center gap-3">
+          <div className="rounded-2xl bg-yellow-400 p-3 text-slate-950 shadow-sm">H</div>
+          <div>
+            <p className="text-xs uppercase tracking-[0.35em] text-slate-500">Herambh</p>
+            <p className="font-black text-lg">Construction</p>
+          </div>
         </Link>
+
+        <nav className="hidden items-center gap-8 md:flex">
+          {navLinks.map((link) => (
+            <Link key={link.href} href={link.href} className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-700 transition hover:text-slate-950">
+              {link.label}
+            </Link>
+          ))}
+          <Link href="/planner" className="rounded-full bg-slate-950 px-6 py-3 text-sm font-bold uppercase tracking-[0.2em] text-white transition hover:bg-slate-800">
+            Planner
+          </Link>
+        </nav>
+
+        <button
+          type="button"
+          onClick={() => setOpen(!open)}
+          className="md:hidden rounded-lg border border-slate-200 p-3 text-slate-700 transition hover:bg-slate-100"
+          aria-label="Toggle navigation"
+        >
+          {open ? <X size={24} /> : <Menu size={24} />}
+        </button>
       </div>
 
-      <div className="md:hidden text-black">
-         <LayoutGrid size={28} />
-      </div>
-    </nav>
+      {open && (
+        <div className="border-t border-slate-200 bg-white px-6 py-6 md:hidden">
+          <div className="flex flex-col gap-4">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                className="block rounded-2xl px-4 py-3 text-sm font-semibold uppercase tracking-[0.25em] text-slate-700 transition hover:bg-slate-100"
+              >
+                {link.label}
+              </Link>
+            ))}
+            <Link
+              href="/planner"
+              onClick={() => setOpen(false)}
+              className="block rounded-full bg-slate-950 px-6 py-3 text-center text-sm font-bold uppercase tracking-[0.2em] text-white transition hover:bg-slate-800"
+            >
+              Planner
+            </Link>
+          </div>
+        </div>
+      )}
+    </header>
   );
 }

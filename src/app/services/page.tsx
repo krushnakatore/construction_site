@@ -1,74 +1,45 @@
-import React from 'react';
-import { Home, Building2, Factory, HardHat, Ruler, ShieldCheck } from 'lucide-react';
+import Image from 'next/image';
+import { servicesContent } from '../../data/content';
+
+const iconMap = {
+  home: 'Home',
+  building: 'Building',
+  factory: 'Factory',
+};
 
 export default function Services() {
-  const services = [
-    {
-      title: 'Residential Construction',
-      icon: <Home size={40} />,
-      desc: 'Expertly crafted custom homes and high-end residential complexes with a focus on modern design and luxury.'
-    },
-    {
-      title: 'Commercial Infrastructure',
-      icon: <Building2 size={40} />,
-      desc: 'Sophisticated office spaces, shopping malls, and mixed-use buildings engineered for business growth.'
-    },
-    {
-      title: 'Industrial Scaling',
-      icon: <Factory size={40} />,
-      desc: 'Robust factories, warehouses, and industrial units designed for maximum productivity and safety compliance.'
-    },
-    {
-      title: 'Project Management',
-      icon: <HardHat size={40} />,
-      desc: 'End-to-end oversight ensuring every phase of construction meets our stringent quality and safety standards.'
-    },
-    {
-      title: 'Architectural Planning',
-      icon: <Ruler size={40} />,
-      desc: 'Precision blueprints and detailed 3D modeling to visualize and optimize your structure before the first brick is laid.'
-    },
-    {
-      title: 'Safety Auditing',
-      icon: <ShieldCheck size={40} />,
-      desc: 'Comprehensive structural integrity assessments and safety drills to ensure zero-compromise security.'
-    }
-  ];
-
   return (
-    <main className="bg-neutral-50 min-h-screen">
-      <div className="relative h-[50vh] flex flex-col justify-center items-center text-center px-6 bg-neutral-900 text-white overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full opacity-20">
-           <img src="https://images.unsplash.com/photo-1541913054-9463286881d3" className="w-full h-full object-cover" alt="Services" />
+    <main className="bg-slate-50">
+      <section className="bg-slate-950 text-white py-24 px-6 text-center lg:px-10">
+        <div className="mx-auto max-w-4xl">
+          <p className="text-sm uppercase tracking-[0.35em] text-yellow-400 font-bold mb-4">Services</p>
+          <h1 className="text-5xl font-black leading-tight">{servicesContent.hero.heading}</h1>
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-8 text-slate-300">{servicesContent.hero.subheading}</p>
         </div>
-        <h1 className="relative z-10 text-6xl md:text-8xl font-black italic uppercase italic tracking-tighter mb-4">OUR EXPERTISE.</h1>
-        <p className="relative z-10 text-yellow-500 font-bold max-w-xl italic uppercase tracking-widest">Mastering the art of building since 1995.</p>
-      </div>
+      </section>
 
-      <div className="container mx-auto px-6 md:px-12 py-24 -mt-20 relative z-10">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((svc, i) => (
-            <div key={i} className="bg-white p-10 shadow-xl border border-neutral-100 hover:border-yellow-500 transition-all group">
-              <div className="text-yellow-500 mb-6 group-hover:scale-110 transition-transform origin-left">
-                {svc.icon}
+      <section className="mx-auto max-w-6xl px-6 py-20 lg:px-10">
+        <div className="grid gap-8 md:grid-cols-3">
+          {servicesContent.services.map((service) => (
+            <article key={service.title} className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+              <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-950">
+                {iconMap[service.icon as keyof typeof iconMap]}
               </div>
-              <h2 className="text-2xl font-black mb-4 uppercase tracking-tight text-neutral-900">{svc.title}</h2>
-              <p className="text-neutral-500 text-sm leading-relaxed mb-6">
-                {svc.desc}
-              </p>
-              <div className="h-1 w-12 bg-neutral-900 group-hover:w-full transition-all duration-300"></div>
-            </div>
+              <h2 className="text-2xl font-bold mb-4">{service.title}</h2>
+              <p className="text-slate-600 leading-7">{service.description}</p>
+            </article>
           ))}
         </div>
-      </div>
+      </section>
 
-      <div className="bg-yellow-500 py-20 px-6 text-center">
-         <h2 className="text-4xl font-black mb-8 italic uppercase tracking-tight">Need a customized service?</h2>
-         <a href="/contact" className="bg-black text-white px-10 py-4 font-bold rounded-lg hover:bg-neutral-800 transition shadow-xl inline-block">
-            Talk to an Expert
-         </a>
-      </div>
+      <section className="bg-slate-900 py-20 px-6 text-center text-white lg:px-10">
+        <div className="mx-auto max-w-4xl">
+          <h2 className="text-4xl font-black mb-6">{servicesContent.cta.heading}</h2>
+          <a href={servicesContent.cta.href} className="inline-flex rounded-full bg-yellow-400 px-8 py-4 text-sm font-bold uppercase tracking-[0.2em] text-slate-950 transition hover:bg-yellow-300">
+            {servicesContent.cta.button}
+          </a>
+        </div>
+      </section>
     </main>
   );
 }
-

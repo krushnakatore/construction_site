@@ -1,20 +1,16 @@
 import './globals.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { metadata as siteMetadata } from '../data/content';
 
-export const metadata = {
-  title: 'Construction Site',
-  description: 'Showcase your construction projects and services',
-};
+export const metadata = siteMetadata;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-neutral-50 min-h-screen flex flex-col">
+      <body className="min-h-screen bg-slate-50 text-slate-900">
         <Navbar />
-        <div className="flex-1 flex flex-col">
-          {children}
-        </div>
+        <main className="flex-1">{children}</main>
         <Footer />
       </body>
     </html>
