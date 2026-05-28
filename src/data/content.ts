@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Herambh Construction',
+  title: 'Herambh Constructions - Building stronger futures, one project at a time.',
   description: 'Premium construction services for residential, commercial, and industrial projects.',
 };
 

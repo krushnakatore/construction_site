@@ -3,7 +3,12 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { metadata as siteMetadata } from '../data/content';
 
-export const metadata = siteMetadata;
+export const metadata = {
+  ...siteMetadata,
+  icons: {
+    icon: '/favicon.svg',
+  },
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

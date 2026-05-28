@@ -15,7 +15,7 @@ export default function Navbar() {
           <div className="rounded-2xl bg-yellow-400 p-3 text-slate-950 shadow-sm">H</div>
           <div>
             <p className="text-xs uppercase tracking-[0.35em] text-slate-500">Herambh</p>
-            <p className="font-black text-lg">Construction</p>
+            <p className="font-black text-lg">Constructions</p>
           </div>
         </Link>
 

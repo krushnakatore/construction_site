@@ -21,7 +21,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="border-t border-slate-800 bg-slate-950 px-6 py-6 text-center text-xs text-slate-500">
-        Herambh Construction © {year}. All rights reserved.
+        Herambh Constructions © {year}. All rights reserved.
       </div>
     </footer>
   );
